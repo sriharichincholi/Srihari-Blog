@@ -14,7 +14,7 @@ I’m writing this blog as an official answer to a question every neighborhood u
 
 To give a bit of context: I’ve always had an appetite for STEM. I got exposed to computers at a young age—waiting for new *Angry Birds* updates or *Need for Speed* releases, playing as a typical free-to-play gamer. Naturally, those early exposures steered me toward engineering. 
 
-I was fortunate to stay in the top 10 of my class in 10th grade, win STEM Olympiad medals from school to district levels, and clear competitive exams like JEE Mains and TG EAPCET (EAMCET), where I secured a rank of 3,776—something I’m deeply grateful to God and my parents for.
+I was fortunate to stay in the top 8 students of my Institution in 10th grade, win STEM Olympiad medals from school to district levels, and clear competitive exams like JEE Mains and TG EAPCET (EAMCET), where I secured a rank of 3,700—something I’m deeply grateful to God and my parents for.
 
 So, why Quant?
 
