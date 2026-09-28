@@ -19,7 +19,7 @@ import {
   Code2
 } from 'lucide-react';
 import { TetrisCanvas } from './components/TetrisCanvas';
-import { PROJECTS_DATA, type ProjectItem } from './projectsData';
+import { PROJECTS, type Project } from './data/projectsData';
 
 // --- TYPES ---
 export interface PostFrontmatter {
@@ -65,7 +65,7 @@ export default function App() {
   const [isPostsMenuOpen, setIsPostsMenuOpen] = useState<boolean>(false);
   const [isTagsMenuOpen, setIsTagsMenuOpen] = useState<boolean>(false);
   const [activePost, setActivePost] = useState<Post | null>(null);
-  const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
     if (darkMode) {
@@ -393,7 +393,7 @@ export default function App() {
                   <FolderCode size={16} />
                   <span className="font-semibold">Projects</span>
                 </div>
-                <span className="text-xs opacity-60 font-mono">[{PROJECTS_DATA.length}]</span>
+                <span className="text-xs opacity-60 font-mono">[{PROJECTS.length}]</span>
               </button>
             </div>
 
@@ -498,7 +498,7 @@ export default function App() {
               <div>Mode: <span className="text-gray-200">{darkMode ? (isProjectsView ? 'Terminal Cyan' : 'Terminal Dark') : 'Academic Light'}</span></div>
               <div>Sort: <span className="text-gray-200">{sortOption}</span></div>
               <div>Filter: <span className="text-gray-200">{selectedTags.length ? selectedTags.join(', ') : 'None'}</span></div>
-              <div>Loaded: <span className="text-gray-200">{POSTS.length} posts / {PROJECTS_DATA.length} projects</span></div>
+              <div>Loaded: <span className="text-gray-200">{POSTS.length} posts / {PROJECTS.length} projects</span></div>
             </div>
           </div>
         </aside>
@@ -553,24 +553,31 @@ export default function App() {
 
               <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-3">
                 <span>{activeProject.date}</span>
-                {activeProject.category && (
+                {activeProject.status && (
                   <span className={`px-2 py-0.5 rounded text-[11px] font-mono ${
                     darkMode ? 'bg-cyan-950/80 border border-cyan-800/60 text-[#00f0ff]' : 'bg-violet-50 border border-violet-200 text-[#8b5cf6]'
                   }`}>
-                    [{activeProject.category}]
+                    [{activeProject.status}]
                   </span>
                 )}
               </div>
 
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-3">{activeProject.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-3">{activeProject.name}</h2>
               <p className="text-sm font-sans text-gray-400 leading-relaxed mb-6">
                 {activeProject.description}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-8">
+                {activeProject.tags.map((t: string) => (
+                  <span key={t} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
+                    darkMode ? 'bg-cyan-950/60 border border-cyan-800/50 text-cyan-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
+                  }`}>
+                    #{t}
+                  </span>
+                ))}
                 {activeProject.technologies.map((tech: string) => (
                   <span key={tech} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
-                    darkMode ? 'bg-cyan-950/60 border border-cyan-800/50 text-cyan-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
+                    darkMode ? 'bg-gray-900 border border-gray-800 text-gray-300' : 'bg-gray-100 border border-gray-200 text-gray-700'
                   }`}>
                     {tech}
                   </span>
@@ -579,14 +586,14 @@ export default function App() {
 
               {/* PROJECT DETAILS / README */}
               <div className="prose prose-invert max-w-none font-sans leading-relaxed text-gray-300 space-y-4 mb-10 pb-6 border-b border-gray-800/60">
-                <ReactMarkdown>{activeProject.readme}</ReactMarkdown>
+                <ReactMarkdown>{activeProject.details}</ReactMarkdown>
               </div>
 
               {/* REPOSITORY & DEPLOYMENT LINKS STRICTLY AT THE END */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
-                {activeProject.repositoryUrl && (
+                {activeProject.repoUrl && (
                   <a
-                    href={activeProject.repositoryUrl}
+                    href={activeProject.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded font-mono text-xs font-semibold border transition-all cursor-pointer ${
@@ -599,9 +606,9 @@ export default function App() {
                     <ExternalLink size={14} />
                   </a>
                 )}
-                {activeProject.deploymentUrl && (
+                {activeProject.demoUrl && (
                   <a
-                    href={activeProject.deploymentUrl}
+                    href={activeProject.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded font-mono text-xs font-semibold border transition-all cursor-pointer ${
@@ -687,7 +694,7 @@ export default function App() {
               {/* PROJECTS LIST VIEW */}
               {activeTab === 'Projects' && (
                 <div className="space-y-6">
-                  {PROJECTS_DATA.map((project: ProjectItem) => (
+                  {PROJECTS.map((project: Project) => (
                     <article
                       key={project.id}
                       onClick={() => setActiveProject(project)}
@@ -699,31 +706,43 @@ export default function App() {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-xs font-mono text-gray-400">{project.date}</span>
-                        {project.category && (
+                        {project.status && (
                           <span className={`text-[11px] font-mono opacity-80 ${
                             darkMode ? 'text-[#00f0ff]' : 'text-[#8b5cf6]'
                           }`}>
-                            [{project.category}]
+                            [{project.status}]
                           </span>
                         )}
                       </div>
                       <h2 className={`text-xl font-bold font-sans mb-3 transition-colors flex items-center justify-between ${
                         darkMode ? 'group-hover:text-[#00f0ff]' : 'group-hover:text-[#8b5cf6]'
                       }`}>
-                        <span>{project.title}</span>
+                        <span>{project.name}</span>
                         <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </h2>
                       <p className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
                         {project.description}
                       </p>
                       <div className="flex flex-wrap gap-2">
+                        {project.tags.map((tag: string) => (
+                          <span
+                            key={tag}
+                            className={`text-[11px] px-2 py-0.5 rounded font-mono ${
+                              darkMode
+                                ? 'bg-cyan-950/40 border border-cyan-900/60 text-cyan-300'
+                                : 'bg-violet-50 border border-violet-200 text-violet-700'
+                            }`}
+                          >
+                            #{tag}
+                          </span>
+                        ))}
                         {project.technologies.map((tech: string) => (
                           <span
                             key={tech}
                             className={`text-[11px] px-2 py-0.5 rounded font-mono ${
                               darkMode
-                                ? 'bg-cyan-950/40 border border-cyan-900/60 text-cyan-300'
-                                : 'bg-violet-50 border border-violet-200 text-violet-700'
+                                ? 'bg-gray-900 border border-gray-800 text-gray-400'
+                                : 'bg-gray-100 border border-gray-200 text-gray-600'
                             }`}
                           >
                             {tech}
