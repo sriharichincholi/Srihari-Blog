@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import fm from 'front-matter';
+import { motion } from 'framer-motion';
 import { 
   FileText, 
   FolderCode,
@@ -16,9 +17,14 @@ import {
   Terminal,
   Cpu,
   ExternalLink,
-  Code2
+  Code2,
+  Gamepad2,
+  GraduationCap,
+  Sparkles,
+  Send
 } from 'lucide-react';
 import { TetrisCanvas } from './components/TetrisCanvas';
+import { TypewriterOnScroll } from './components/TypewriterOnScroll';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
@@ -67,6 +73,12 @@ export default function App() {
   const [activePost, setActivePost] = useState<Post | null>(null);
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
 
+  // Tabbed Section State for "WHAT I KNOW"
+  const [skillsTab, setSkillsTab] = useState<'Skills' | 'Education' | 'Currently Learning'>('Skills');
+
+  // Flip Card states
+  const [flippedCard, setFlippedCard] = useState<number | null>(null);
+
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -93,6 +105,19 @@ export default function App() {
   };
 
   const clearTags = () => setSelectedTags([]);
+
+  const scrollToAboutMe = () => {
+    setShowLanding(false);
+    setActiveTab('About me');
+    setActivePost(null);
+    setActiveProject(null);
+    setTimeout(() => {
+      const el = document.getElementById('about-me');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   // --- MATRIX CANVAS EFFECT FOR BACKGROUND ---
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -154,13 +179,70 @@ export default function App() {
     };
   }, [showLanding, activeTab, darkMode]);
 
+  // --- TOP FLOATING NAVBAR ---
+  const TopNavbar = () => (
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-2.5 rounded-full bg-emerald-950/40 backdrop-blur-md border border-emerald-500/20 shadow-lg shadow-emerald-950/50 flex items-center gap-6 text-xs font-mono">
+      <button
+        onClick={() => setShowLanding(true)}
+        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+      >
+        Home
+      </button>
+      <button
+        onClick={scrollToAboutMe}
+        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+      >
+        About
+      </button>
+      <button
+        onClick={() => {
+          setShowLanding(false);
+          setActiveTab('About me');
+          setActivePost(null);
+          setActiveProject(null);
+          setTimeout(() => {
+            const el = document.getElementById('skills-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }}
+        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+      >
+        Skills
+      </button>
+      <button
+        onClick={() => {
+          setShowLanding(false);
+          setActiveTab('Projects');
+          setActivePost(null);
+          setActiveProject(null);
+        }}
+        className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
+      >
+        Projects
+      </button>
+      <button
+        onClick={() => {
+          setShowLanding(false);
+          setActiveTab('Posts');
+          setActivePost(null);
+          setActiveProject(null);
+        }}
+        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+      >
+        Blog
+      </button>
+    </nav>
+  );
+
   // --- LANDING PAGE ---
   if (showLanding) {
     return (
       <div className={`relative min-h-screen w-full flex flex-col justify-between overflow-x-hidden ${darkMode ? 'bg-[#050705] text-gray-100' : 'bg-slate-50 text-gray-900'}`}>
         <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-70" />
 
-        <div className="relative z-10 p-6 flex justify-end">
+        <TopNavbar />
+
+        <div className="relative z-10 p-6 flex justify-end pt-20">
           <button 
             onClick={() => setDarkMode(!darkMode)}
             className={`p-2.5 rounded-lg border transition-all ${
@@ -189,9 +271,12 @@ export default function App() {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl font-light mb-8 leading-relaxed">
-              Experimenting with low-latency architectures, algorithmic efficiency, and quantitative systems.
-            </p>
+            <div className="text-lg md:text-xl text-gray-400 max-w-2xl font-light mb-8 leading-relaxed font-mono min-h-[3.5rem]">
+              <TypewriterOnScroll
+                text="Experimenting with low-latency architectures, algorithmic efficiency, and quantitative systems."
+                speed={25}
+              />
+            </div>
 
             <div className="flex flex-wrap items-center gap-4">
               <button
@@ -201,13 +286,9 @@ export default function App() {
                   setActiveProject(null);
                   setShowLanding(false);
                 }}
-                className={`group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium transition-all duration-200 cursor-pointer ${
-                  darkMode
-                    ? 'bg-[#00ff66] text-black hover:bg-emerald-400'
-                    : 'bg-[#8b5cf6] text-white hover:bg-violet-600'
-                }`}
+                className="group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium transition-all duration-200 cursor-pointer bg-emerald-900/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
               >
-                <span>Check posts</span>
+                <span>Posts</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -218,14 +299,19 @@ export default function App() {
                   setActiveProject(null);
                   setShowLanding(false);
                 }}
-                className={`group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium border transition-all duration-200 cursor-pointer ${
-                  darkMode
-                    ? 'border-[#00f0ff]/60 bg-[#00f0ff]/10 text-[#00f0ff] hover:border-[#00f0ff] hover:bg-[#00f0ff]/20'
-                    : 'border-[#8b5cf6]/60 bg-[#8b5cf6]/10 text-[#8b5cf6] hover:border-[#8b5cf6] hover:bg-[#8b5cf6]/20'
-                }`}
+                className="group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium border transition-all duration-200 cursor-pointer bg-emerald-900/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
               >
                 <Code2 size={16} />
                 <span>Projects</span>
+                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <button
+                onClick={scrollToAboutMe}
+                className="group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium border transition-all duration-200 cursor-pointer bg-rose-950/20 border-rose-500/40 text-rose-400 hover:bg-rose-500/20"
+              >
+                <User size={16} />
+                <span>About me</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -252,8 +338,10 @@ export default function App() {
     <div className={`relative min-h-screen flex flex-col justify-between ${darkMode ? 'bg-[#050705] text-gray-200' : 'bg-slate-50 text-gray-800'}`}>
       <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-70" />
 
+      <TopNavbar />
+
       {/* Top Controls */}
-      <header className={`relative z-40 w-full border-b px-6 py-4 flex justify-between items-center backdrop-blur sticky top-0 ${
+      <header className={`relative z-40 w-full border-b px-6 py-4 pt-16 flex justify-between items-center backdrop-blur sticky top-0 ${
         darkMode ? 'border-gray-800/60 bg-[#050705]/90' : 'border-gray-200 bg-slate-50/90'
       }`}>
         <button 
@@ -286,15 +374,19 @@ export default function App() {
         <aside className="md:col-span-4 lg:col-span-4 flex flex-col justify-start">
           <div className="mb-10">
             <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight font-sans leading-tight">
-              <div>Srihari's Blog.</div>
-              <div className="text-gray-400 font-normal">Experimenting and</div>
-              <div className="text-gray-400 font-normal">Implementing</div>
+              <TypewriterOnScroll text="Srihari's Blog." className="block" speed={30} />
+              <div className="text-gray-400 font-normal mt-1">
+                <TypewriterOnScroll text="Experimenting and" speed={30} delay={400} />
+              </div>
+              <div className="text-gray-400 font-normal">
+                <TypewriterOnScroll text="Implementing" speed={30} delay={800} />
+              </div>
               <div className={`font-mono font-bold ${
                 darkMode
                   ? isProjectsView ? 'text-[#00f0ff]' : 'text-[#00ff66]'
                   : 'text-[#8b5cf6]'
               }`}>
-                Efficient code
+                <TypewriterOnScroll text="Efficient code" speed={30} delay={1200} />
               </div>
             </h1>
           </div>
@@ -371,7 +463,7 @@ export default function App() {
               )}
             </div>
 
-            {/* Nav 2: Projects (New Control beside/below Posts) */}
+            {/* Nav 2: Projects */}
             <div>
               <button
                 onClick={() => {
@@ -504,7 +596,7 @@ export default function App() {
         </aside>
 
         {/* RIGHT COLUMN: CONTENT */}
-        <main className="md:col-span-8 lg:col-span-8 flex flex-col">
+        <main className="md:col-span-8 lg:col-span-8 flex flex-col gap-12">
           {/* ACTIVE POST DETAIL */}
           {activePost ? (
             <article className={`p-6 md:p-8 rounded border transition-all ${
@@ -521,7 +613,9 @@ export default function App() {
                 <span>•</span>
                 <span>{activePost.frontmatter.readTime}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4">{activePost.frontmatter.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4">
+                <TypewriterOnScroll text={activePost.frontmatter.title} speed={25} />
+              </h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {activePost.frontmatter.tags?.map((t: string) => (
                   <span key={t} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
@@ -562,9 +656,11 @@ export default function App() {
                 )}
               </div>
 
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-3">{activeProject.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-3">
+                <TypewriterOnScroll text={activeProject.title} speed={25} />
+              </h2>
               <p className="text-sm font-sans text-gray-400 leading-relaxed mb-6">
-                {activeProject.description}
+                <TypewriterOnScroll text={activeProject.description} speed={15} />
               </p>
 
               <div className="flex flex-wrap gap-2 mb-8">
@@ -658,12 +754,12 @@ export default function App() {
                           <span className="text-xs font-mono text-gray-400">{post.frontmatter.readTime}</span>
                         </div>
                         <h2 className="text-xl font-bold font-sans mb-3 group-hover:text-emerald-400 transition-colors flex items-center justify-between">
-                          <span>{post.frontmatter.title}</span>
+                          <TypewriterOnScroll text={post.frontmatter.title} speed={25} />
                           <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </h2>
-                        <p className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
-                          {post.frontmatter.excerpt}
-                        </p>
+                        <div className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
+                          <TypewriterOnScroll text={post.frontmatter.excerpt} speed={15} />
+                        </div>
                         <div className="flex flex-wrap gap-2">
                           {post.frontmatter.tags?.map(tag => (
                             <span
@@ -710,12 +806,12 @@ export default function App() {
                       <h2 className={`text-xl font-bold font-sans mb-3 transition-colors flex items-center justify-between ${
                         darkMode ? 'group-hover:text-[#00f0ff]' : 'group-hover:text-[#8b5cf6]'
                       }`}>
-                        <span>{project.title}</span>
+                        <TypewriterOnScroll text={project.title} speed={25} />
                         <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </h2>
-                      <p className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
-                        {project.description}
-                      </p>
+                      <div className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
+                        <TypewriterOnScroll text={project.description} speed={15} />
+                      </div>
                       <div className="flex flex-wrap gap-2">
                         {project.technologies.map((tech: string) => (
                           <span
@@ -784,45 +880,361 @@ export default function App() {
 
               {/* ABOUT ME VIEW */}
               {activeTab === 'About me' && (
-                <div className={`p-6 md:p-8 rounded border space-y-8 ${
-                  darkMode ? 'bg-[#0a0d0a] border-gray-800 text-gray-300' : 'bg-white border-gray-200 text-gray-700'
-                }`}>
-                  <div>
-                    <h2 className="text-2xl font-bold font-sans text-gray-100 mb-2">Srihari Chincholi</h2>
-                    <p className="text-sm font-mono text-gray-400">// Systems & Quantitative Research</p>
+                <div id="about-me" className="space-y-12 scroll-mt-24">
+                  {/* ABOUT ME SECTION CONTAINER */}
+                  <div className={`p-6 md:p-8 rounded border space-y-8 ${
+                    darkMode ? 'bg-[#0a0d0a] border-gray-800 text-gray-300' : 'bg-white border-gray-200 text-gray-700'
+                  }`}>
+                    {/* Header with Typewriter */}
+                    <div>
+                      <h2 className="text-2xl font-bold font-mono text-emerald-400 mb-1 flex items-center gap-2">
+                        <span>$</span>
+                        <TypewriterOnScroll text="who-am-i" speed={40} />
+                      </h2>
+                      <p className="text-xs font-mono text-gray-500">// Systems & Quantitative Research</p>
+                    </div>
+
+                    {/* 3 Interactive Flip Metric Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Box 1: Dynamic Projects Count */}
+                      <div
+                        className="perspective h-28 cursor-pointer"
+                        onMouseEnter={() => setFlippedCard(1)}
+                        onMouseLeave={() => setFlippedCard(null)}
+                      >
+                        <motion.div
+                          className="w-full h-full relative rounded border border-emerald-500/30 bg-emerald-950/20 p-4 flex flex-col justify-center items-center text-center transition-transform duration-500"
+                          animate={{ rotateY: flippedCard === 1 ? 180 : 0 }}
+                          style={{ transformStyle: 'preserve-3d' }}
+                        >
+                          {/* Front */}
+                          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 [backface-visibility:hidden]">
+                            <span className="text-2xl font-bold font-mono text-emerald-400">
+                              {PROJECTS_DATA.length} PROJECTS
+                            </span>
+                            <span className="text-[11px] font-mono text-gray-500 mt-1">
+                              Dynamic Portfolio Counter
+                            </span>
+                          </div>
+                          {/* Back */}
+                          <div
+                            className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-emerald-900/80 rounded border border-emerald-400 text-emerald-100 font-mono text-xs font-semibold [backface-visibility:hidden] cursor-pointer"
+                            style={{ transform: 'rotateY(180deg)' }}
+                            onClick={() => {
+                              setActiveTab('Projects');
+                              setActivePost(null);
+                              setActiveProject(null);
+                            }}
+                          >
+                            <span>Visit Projects ↗</span>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Box 2: 4 Spoken Languages */}
+                      <div
+                        className="perspective h-28 cursor-pointer"
+                        onMouseEnter={() => setFlippedCard(2)}
+                        onMouseLeave={() => setFlippedCard(null)}
+                      >
+                        <motion.div
+                          className="w-full h-full relative rounded border border-emerald-500/30 bg-emerald-950/20 p-4 flex flex-col justify-center items-center text-center transition-transform duration-500"
+                          animate={{ rotateY: flippedCard === 2 ? 180 : 0 }}
+                          style={{ transformStyle: 'preserve-3d' }}
+                        >
+                          {/* Front */}
+                          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 [backface-visibility:hidden]">
+                            <span className="text-2xl font-bold font-mono text-emerald-400">
+                              4 SPOKEN LANGUAGES
+                            </span>
+                            <span className="text-[11px] font-mono text-gray-500 mt-1">
+                              Linguistic Proficiency
+                            </span>
+                          </div>
+                          {/* Back */}
+                          <div
+                            className="absolute inset-0 flex flex-col justify-center items-center p-2 bg-emerald-900/80 rounded border border-emerald-400 text-emerald-100 font-mono text-[11px] [backface-visibility:hidden]"
+                            style={{ transform: 'rotateY(180deg)' }}
+                          >
+                            <div className="flex flex-wrap gap-1.5 justify-center">
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/50">• English</span>
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/50">• Hindi</span>
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/50">• Telugu</span>
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/50">• Kannada</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Box 3: Open to Roles */}
+                      <div
+                        className="perspective h-28 cursor-pointer"
+                        onMouseEnter={() => setFlippedCard(3)}
+                        onMouseLeave={() => setFlippedCard(null)}
+                      >
+                        <motion.div
+                          className="w-full h-full relative rounded border border-emerald-500/30 bg-emerald-950/20 p-4 flex flex-col justify-center items-center text-center transition-transform duration-500"
+                          animate={{ rotateY: flippedCard === 3 ? 180 : 0 }}
+                          style={{ transformStyle: 'preserve-3d' }}
+                        >
+                          {/* Front */}
+                          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 [backface-visibility:hidden]">
+                            <span className="text-2xl font-bold font-mono text-emerald-400">
+                              OPEN TO ROLES
+                            </span>
+                            <span className="text-[11px] font-mono text-gray-500 mt-1">
+                              Opportunities
+                            </span>
+                          </div>
+                          {/* Back */}
+                          <div
+                            className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-emerald-900/80 rounded border border-emerald-400 text-emerald-100 font-mono text-xs font-semibold [backface-visibility:hidden]"
+                            style={{ transform: 'rotateY(180deg)' }}
+                          >
+                            <span>Quant Research & GameDev</span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    </div>
+
+                    {/* Bio Copy with Scroll-Triggered Typewriter */}
+                    <div className="space-y-4 text-sm font-sans leading-relaxed text-gray-300 border-l-2 border-emerald-500/40 pl-4 py-1">
+                      <p>
+                        <TypewriterOnScroll
+                          text="An 18-year-old Information Technology Engineering student at CBIT who experiments, makes (and breaks) code for fun, pursues GameDev and Quantitative Research while managing college studies."
+                          speed={18}
+                        />
+                      </p>
+                      <p>
+                        <TypewriterOnScroll
+                          text="When I'm not on my IDE, you'll find me singing, making or listening to music, playing the guitar, or playing video games."
+                          speed={18}
+                          delay={1200}
+                        />
+                      </p>
+                    </div>
+
+                    {/* ⚡ CURRENTLY Status Board */}
+                    <div className="p-5 rounded border border-emerald-500/20 bg-emerald-950/10 space-y-3 font-mono text-xs">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold tracking-wider uppercase mb-2">
+                        <Sparkles size={14} />
+                        <span>⚡ CURRENTLY</span>
+                      </div>
+                      <div className="space-y-2 text-gray-300">
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-violet-400 mt-1 shrink-0"></span>
+                          <span className="text-violet-300">
+                            <strong>Learning:</strong> C, C++, and JavaScript for system-level multitasking and low-latency code.
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-blue-400 mt-1 shrink-0"></span>
+                          <span className="text-blue-300">
+                            <strong>Building:</strong> A web-game built with Next.js and React, powered by Vercel.
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-yellow-400 mt-1 shrink-0"></span>
+                          <span className="text-yellow-300">
+                            <strong>Working:</strong> On a parallel repository focused on Quantitative Research.
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2.5">
+                          <span className="w-2 h-2 rounded-full bg-orange-400 mt-1 shrink-0"></span>
+                          <span className="text-orange-300">
+                            <strong>Aspiring:</strong> Quantitative Research or Game Development roles.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <section className="space-y-3">
-                    <h3 className="text-xs font-mono uppercase tracking-wider text-gray-400 font-semibold">
-                      [ Introduction ]
-                    </h3>
-                    <p className="text-sm leading-relaxed font-sans">
-                      Focused on low-latency C++ systems, code optimization, numerical analysis, and quantitative research models.
-                    </p>
-                  </section>
+                  {/* 02 — SKILLS & EDUCATION (TABBED SECTION) */}
+                  <div id="skills-section" className={`p-6 md:p-8 rounded border space-y-6 ${
+                    darkMode ? 'bg-[#0a0d0a] border-gray-800' : 'bg-white border-gray-200'
+                  }`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800/60 pb-4">
+                      <div>
+                        <div className="text-xs font-mono text-emerald-400 uppercase tracking-widest font-semibold mb-1">
+                          02 — SKILLS & EDUCATION
+                        </div>
+                        <h3 className="text-2xl font-bold font-sans text-gray-100">What I Know</h3>
+                      </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <section className="space-y-2">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-gray-400 font-semibold">
-                        [ Technical Interests ]
-                      </h3>
-                      <ul className="text-sm font-sans space-y-1.5 list-disc list-inside text-gray-300">
-                        <li>Low-latency C++ / Systems Architecture</li>
-                        <li>Custom Arena Allocators & Cache Locality</li>
-                        <li>Lock-Free Data Structures & Atomicity</li>
-                      </ul>
-                    </section>
+                      {/* Triple Select Tabs */}
+                      <div className="inline-flex p-1 rounded-lg bg-gray-900 border border-gray-800 text-xs font-mono">
+                        {(['Skills', 'Education', 'Currently Learning'] as const).map(tab => (
+                          <button
+                            key={tab}
+                            onClick={() => setSkillsTab(tab)}
+                            className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
+                              skillsTab === tab
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-semibold'
+                                : 'text-gray-400 hover:text-gray-200'
+                            }`}
+                          >
+                            {tab}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-                    <section className="space-y-2">
-                      <h3 className="text-xs font-mono uppercase tracking-wider text-gray-400 font-semibold">
-                        [ Research Focus ]
-                      </h3>
-                      <ul className="text-sm font-sans space-y-1.5 list-disc list-inside text-gray-300">
-                        <li>Matrix Decomposition & Floating-Point Stability</li>
-                        <li>High-Throughput Concurrent Systems</li>
-                        <li>Algorithmic Trading & Statistical Modeling</li>
-                      </ul>
-                    </section>
+                    {/* Skills Tab Content */}
+                    {skillsTab === 'Skills' && (
+                      <div className="space-y-6">
+                        <div>
+                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Languages</div>
+                          <div className="flex flex-wrap gap-2">
+                            {['Python', 'TypeScript', 'C++', 'C', 'JavaScript'].map(lang => (
+                              <span key={lang} className="px-3 py-1 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
+                                {lang}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Frameworks</div>
+                          <div className="flex flex-wrap gap-2">
+                            {['Next.js', 'Node.js', 'Three.js', 'Tailwind'].map(fw => (
+                              <span key={fw} className="px-3 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
+                                {fw}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Tools</div>
+                          <div className="flex flex-wrap gap-2">
+                            {['WebSockets', 'Web Audio API', 'Web Scraping'].map(tool => (
+                              <span key={tool} className="px-3 py-1 rounded bg-purple-950/40 border border-purple-500/30 text-purple-300 text-xs font-mono">
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Education Tab Content */}
+                    {skillsTab === 'Education' && (
+                      <div className="space-y-4">
+                        <div className="p-4 rounded border border-gray-800 bg-gray-900/40 flex items-start gap-3">
+                          <GraduationCap size={20} className="text-emerald-400 mt-1 shrink-0" />
+                          <div>
+                            <div className="font-bold text-sm text-gray-200">CBIT, Hyderabad</div>
+                            <div className="text-xs font-mono text-emerald-400">B.E. in Information Technology (2026 — Present)</div>
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded border border-gray-800 bg-gray-900/40 flex items-start gap-3">
+                          <GraduationCap size={20} className="text-cyan-400 mt-1 shrink-0" />
+                          <div>
+                            <div className="font-bold text-sm text-gray-200">Resonance Eduventures</div>
+                            <div className="text-xs font-mono text-cyan-400">Senior Secondary</div>
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded border border-gray-800 bg-gray-900/40 flex items-start gap-3">
+                          <GraduationCap size={20} className="text-purple-400 mt-1 shrink-0" />
+                          <div>
+                            <div className="font-bold text-sm text-gray-200">DAV Public School</div>
+                            <div className="text-xs font-mono text-purple-400">Schooling</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Currently Learning Tab Content */}
+                    {skillsTab === 'Currently Learning' && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-4 rounded border border-emerald-500/30 bg-emerald-950/20 space-y-2">
+                          <div className="text-xs font-mono text-emerald-400 uppercase tracking-wider font-semibold">RIGHT NOW</div>
+                          <div className="flex flex-wrap gap-2 pt-1">
+                            {['Next.js', 'WebSockets', 'Three.js'].map(item => (
+                              <span key={item} className="px-2.5 py-1 rounded bg-emerald-900/40 border border-emerald-500/40 text-emerald-200 text-xs font-mono">
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded border border-cyan-500/30 bg-cyan-950/20 space-y-2">
+                          <div className="text-xs font-mono text-cyan-400 uppercase tracking-wider font-semibold">UP NEXT</div>
+                          <div className="flex flex-wrap gap-2 pt-1">
+                            {['Low-Latency C++', 'Quant Models'].map(item => (
+                              <span key={item} className="px-2.5 py-1 rounded bg-cyan-900/40 border border-cyan-500/40 text-cyan-200 text-xs font-mono">
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 03 — PROJECTS / GITHUB ACTIVITY & GAMEDEV MULTIPLAYER CONNECT */}
+                  <div className={`p-6 md:p-8 rounded border space-y-8 ${
+                    darkMode ? 'bg-[#0a0d0a] border-gray-800' : 'bg-white border-gray-200'
+                  }`}>
+                    <div>
+                      <div className="text-xs font-mono text-emerald-400 uppercase tracking-widest font-semibold mb-1">
+                        03 — PROJECTS
+                      </div>
+                      <h3 className="text-2xl font-bold font-sans text-gray-100">What I Have Built</h3>
+                    </div>
+
+                    {/* GitHub Heatmap Card */}
+                    <div className="p-5 rounded border border-gray-800 bg-gray-900/30 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 font-mono text-xs text-emerald-400">
+                          <Code2 size={16} />
+                          <span>GitHub Activity Contributions</span>
+                        </div>
+                        <a
+                          href="https://github.com/sriharichincholi"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-mono text-gray-400 hover:text-emerald-400 flex items-center gap-1"
+                        >
+                          <span>@sriharichincholi</span>
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
+
+                      {/* Embed Heatmap Image */}
+                      <div className="w-full overflow-x-auto rounded bg-black/40 p-3 border border-gray-800/80">
+                        <img
+                          src="https://ghchart.rshah.org/00ff66/sriharichincholi"
+                          alt="Srihari's GitHub Contribution Chart"
+                          className="w-full min-w-[600px] opacity-90 hover:opacity-100 transition-opacity"
+                        />
+                      </div>
+                    </div>
+
+                    {/* GameDev Multiplayer Connect Footer */}
+                    <div className="p-6 rounded-xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-[#0a0d0a] to-emerald-950/20 flex flex-col md:flex-row items-center justify-between gap-6">
+                      <div className="space-y-2 text-center md:text-left">
+                        <div className="flex items-center justify-center md:justify-start gap-2 text-xl font-bold text-gray-100 font-sans">
+                          <Gamepad2 size={22} className="text-emerald-400" />
+                          <span>🎮 Let's Build & Play Together!</span>
+                        </div>
+                        <p className="text-xs text-gray-400 font-sans leading-relaxed max-w-xl">
+                          Got a game mechanic idea, quant algorithm, or multiplayer project? Let's turn it into real-time code.
+                        </p>
+                      </div>
+
+                      <a
+                        href="https://github.com/sriharichincholi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-mono text-xs font-bold text-emerald-300 bg-emerald-900/30 border border-emerald-500/40 hover:bg-emerald-500/20 transition-all cursor-pointer shrink-0"
+                      >
+                        <span>Join Lobby / Reach Out →</span>
+                        <Send size={14} />
+                      </a>
+                    </div>
                   </div>
                 </div>
               )}
