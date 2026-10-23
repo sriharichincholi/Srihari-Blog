@@ -2,7 +2,7 @@
 id: "unbound-veyra"
 title: "Unbound: The Island of Veyra"
 category: "Systems & Game Development"
-date: "2026"
+date: "October 2026"
 description: "Unbound is an experimental browser-based 3D low-poly RPG combining Three.js rendering, custom retro shaders, and a Node.js backend. It features an atmospheric island exploration title inspired by classic N64 titles and Elden Ring, complemented entirely by original MIDI-composed soundtracks."
 tags: ["Three.js", "WebGL", "Node.js", "Retro Shaders", "Audio API"]
 repoUrl: "https://github.com/sriharichincholi/Unbound"
@@ -30,6 +30,6 @@ Unbound is an atmospheric, story-driven 3D low-poly web RPG built from scratch o
 - **Frontend-Backend Synchronization:** Powered by a clean decoupled structure utilizing Three.js for real-time 3D rendering and a Node.js backend layer.
 - **Web Performance Optimization:** Implemented aggressive asset management and clean execution to maintain high frame rates across browser-based WebGL viewports.
 
-### 3. Original Composed Soundtracks (MIDI OSTs)
+### 3. Original Composed Soundtracks (MIDI OSTs) [Integration Pending]
 - **Custom Audio Integration:** Avoided generic stock loops by composing original soundtracks from scratch using a physical MIDI keyboard and DAW setup.
 - **Contextual Audio Loops:** Integrated atmospheric exploration themes and tense combat cues directly into the Three.js render loop to dynamically react to gameplay states.
