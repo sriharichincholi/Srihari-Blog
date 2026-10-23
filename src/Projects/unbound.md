@@ -36,6 +36,7 @@ Unbound is an atmospheric, story-driven 3D low-poly web RPG built from scratch o
 
 
 
-### 3. Original Composed Soundtracks (MIDI OSTs) **[Integration Pending]**
+### 3. Original Composed Soundtracks (MIDI OSTs) 
+-**[Integration Pending]**
 - **Custom Audio Integration:** Avoided generic stock loops by composing original soundtracks from scratch using a physical MIDI keyboard and DAW setup.
 - **Contextual Audio Loops:** Integrated atmospheric exploration themes and tense combat cues directly into the Three.js render loop to dynamically react to gameplay states.
