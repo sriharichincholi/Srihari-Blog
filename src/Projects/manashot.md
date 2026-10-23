@@ -5,8 +5,8 @@ category: "Systems & Game Development"
 date: "2026"
 description: "Manashot.io is a high-performance 3D multiplayer browser FPS. Built with Three.js, Node.js, and WebSockets, it combines low-latency spatial synchronization and raycast weapon physics with milestone-based boss encounters and dynamic aerial mob battles."
 tags: ["Three.js", "Node.js", "WebSockets", "GameDev", "WebGL"]
-repoUrl: "https://github.com/sriharichincholi/manashot"
-demoUrl: "https://manashot-io.onrender.com/"
+repoUrl: "https://github.com/sriharichincholi/manashot-io"
+demoUrl: "https://manashot-io.vercel.app"
 previews: ["images/projects/ManaShotPreview1.png", "images/projects/ManashotPreview2.png"]
 ---
 
@@ -29,7 +29,7 @@ Manashot.io is a fast-paced, 3D browser-based multiplayer first-person shooter b
 - **Instantaneous Hitscan Physics:** Computes raycast intersections against player bounding boxes and hitboxes in real-time.
 - **Weapon Spread & Recoil Algorithms:** Dynamic recoil vectors and bloom calculations based on player velocity (standing vs. jumping vs. sprinting).
 
-### 3. Boss Encounters & Dynamic Aerial Mob Battles
+### 3. Boss Encounters & Dynamic Aerial Mob Battles (Work In Progress)
 - **Milestone Boss Spawns:** Event-driven server triggers spawn high-HP boss targets with custom AI attack patterns.
 - **Aerial Mob Wave AI:** Dynamic pathfinding for flying enemy units using vector steering behaviors.
 
