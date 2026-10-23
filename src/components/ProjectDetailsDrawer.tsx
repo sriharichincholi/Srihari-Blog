@@ -42,21 +42,21 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
 
         <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
           <motion.div
-            className="w-screen max-w-2xl bg-[#0a0d0a] border-l border-emerald-500/30 text-gray-200 shadow-2xl flex flex-col justify-between"
+            className="w-screen max-w-2xl bg-[#0a0d0a] border-l border-cyan-500/30 text-gray-200 shadow-2xl flex flex-col justify-between"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           >
             {/* Drawer Header */}
-            <div className="p-6 border-b border-emerald-500/20 bg-emerald-950/30 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
-              <div className="flex items-center gap-2 font-mono text-xs text-emerald-400">
+            <div className="p-6 border-b border-cyan-500/20 bg-cyan-950/30 flex items-center justify-between sticky top-0 z-10 backdrop-blur-md">
+              <div className="flex items-center gap-2 font-mono text-xs text-cyan-400">
                 <Terminal size={16} />
                 <span className="font-semibold uppercase tracking-wider">[ Specifications ]</span>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-md text-gray-400 hover:text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                className="p-1.5 rounded-md text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer"
                 aria-label="Close drawer"
               >
                 <X size={20} />
@@ -68,7 +68,7 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
               <div>
                 <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-2">
                   <span>{project.date}</span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/30 text-emerald-400">
+                  <span className="px-2 py-0.5 rounded bg-cyan-950 border border-cyan-500/30 text-cyan-400">
                     [{project.category}]
                   </span>
                 </div>
@@ -89,7 +89,7 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-2.5 py-1 rounded-md font-mono bg-emerald-950/40 border border-emerald-500/30 text-emerald-300"
+                      className="text-xs px-2.5 py-1 rounded-md font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-300"
                     >
                       {tag}
                     </span>
@@ -99,9 +99,9 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
 
               {/* Previews Quick Trigger */}
               {project.previews && project.previews.length > 0 && onOpenPreview && (
-                <div className="p-4 rounded-lg bg-emerald-950/20 border border-emerald-500/30 flex items-center justify-between">
+                <div className="p-4 rounded-lg bg-cyan-950/20 border border-cyan-500/30 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-16 h-10 rounded overflow-hidden border border-emerald-500/30 bg-black">
+                    <div className="w-16 h-10 rounded overflow-hidden border border-cyan-500/30 bg-black">
                       <img
                         src={project.previews[0]}
                         alt="Preview thumbnail"
@@ -119,7 +119,7 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
                       onClose();
                       onOpenPreview(project);
                     }}
-                    className="px-3 py-1.5 rounded-md text-xs font-mono bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                    className="px-3 py-1.5 rounded-md text-xs font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
                   >
                     View Screenshots ↗
                   </button>
@@ -127,19 +127,19 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
               )}
 
               {/* Readme / Technical Specification Markdown */}
-              <div className="prose prose-invert max-w-none text-sm leading-relaxed border-t border-emerald-500/20 pt-6">
+              <div className="prose prose-invert max-w-none text-sm leading-relaxed border-t border-cyan-500/20 pt-6">
                 <ReactMarkdown>{project.readme}</ReactMarkdown>
               </div>
             </div>
 
             {/* Footer Action Bar */}
-            <div className="p-6 border-t border-emerald-500/20 bg-[#050705] flex flex-wrap items-center gap-3 justify-between font-mono text-xs">
+            <div className="p-6 border-t border-cyan-500/20 bg-[#050705] flex flex-wrap items-center gap-3 justify-between font-mono text-xs">
               <div className="flex items-center gap-3">
                 <a
                   href={project.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
                 >
                   <Code2 size={14} />
                   <span>GitHub Repository</span>
@@ -150,7 +150,7 @@ export const ProjectDetailsDrawer: React.FC<ProjectDetailsDrawerProps> = ({
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer"
                 >
                   <Globe size={14} />
                   <span>Live Deployment</span>
