@@ -2,7 +2,7 @@
 id: "manashot-io"
 title: "Manashot.io"
 category: "Systems & Game Development"
-date: "2026"
+date: "September 2026"
 description: "Manashot.io is a high-performance 3D multiplayer browser FPS. Built with Three.js, Node.js, and WebSockets, it combines low-latency spatial synchronization and raycast weapon physics with milestone-based boss encounters and dynamic aerial mob battles."
 tags: ["Three.js", "Node.js", "WebSockets", "GameDev", "WebGL"]
 repoUrl: "https://github.com/sriharichincholi/manashot-io"
