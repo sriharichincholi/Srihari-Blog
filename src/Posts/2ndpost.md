@@ -1,7 +1,7 @@
 ---
 title: "The Art of Understanding Code Logic (And Its Many Complexities)"
 date: "2026-09-28"
-tags: ["programming", "c", "python", "gamedev", "college"]
+tags: ["programming","Personal"]
 readTime: "4 min read"
 excerpt: "Navigating the chaotic world of 'Language Lasagna'—juggling C, C++, and Python alongside side-quests, coursework, and everything in between."
 ---
