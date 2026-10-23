@@ -598,26 +598,26 @@ export default function App() {
           {/* ACTIVE POST DETAIL */}
           {activePost ? (
             <article className={`p-6 md:p-8 rounded border transition-all ${
-              darkMode ? 'bg-[#0a0d0a] border-gray-800' : 'bg-white border-gray-200'
+              darkMode ? 'bg-[#0a0d0a] border-cyan-500/30 shadow-lg shadow-cyan-950/30' : 'bg-white border-gray-200'
             }`}>
               <button 
                 onClick={() => setActivePost(null)}
-                className="text-xs font-mono mb-6 text-gray-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                className="text-xs font-mono mb-6 text-gray-400 hover:text-cyan-400 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 ← Back to posts
               </button>
               <div className="flex items-center gap-3 text-xs font-mono text-gray-400 mb-3">
                 <span>{activePost.frontmatter.date}</span>
                 <span>•</span>
-                <span>{activePost.frontmatter.readTime}</span>
+                <span className="text-cyan-400">{activePost.frontmatter.readTime}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4 text-gray-100">
                 <TypewriterOnScroll text={activePost.frontmatter.title} speed={25} />
               </h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {activePost.frontmatter.tags?.map((t: string) => (
                   <span key={t} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
-                    darkMode ? 'bg-emerald-950/60 border border-emerald-800/50 text-emerald-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
+                    darkMode ? 'bg-cyan-950/60 border border-cyan-500/30 text-cyan-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
                   }`}>
                     #{t}
                   </span>
@@ -662,15 +662,15 @@ export default function App() {
                         onClick={() => setActivePost(post)}
                         className={`group p-6 rounded border cursor-pointer transition-all duration-200 ${
                           darkMode
-                            ? 'bg-[#0a0d0a] border-gray-800/80 hover:border-[#00ff66]'
+                            ? 'bg-[#0a0d0a] border-gray-800/80 hover:border-cyan-400'
                             : 'bg-white border-gray-200 hover:border-[#8b5cf6]'
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <span className="text-xs font-mono text-gray-400">{post.frontmatter.date}</span>
-                          <span className="text-xs font-mono text-gray-400">{post.frontmatter.readTime}</span>
+                          <span className="text-xs font-mono text-cyan-400">{post.frontmatter.readTime}</span>
                         </div>
-                        <h2 className="text-xl font-bold font-sans mb-3 group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+                        <h2 className="text-xl font-bold font-sans mb-3 group-hover:text-cyan-400 transition-colors flex items-center justify-between">
                           <TypewriterOnScroll text={post.frontmatter.title} speed={25} />
                           <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </h2>
@@ -705,7 +705,7 @@ export default function App() {
                       key={project.id}
                       className={`group p-6 rounded-xl border transition-all duration-200 ${
                         darkMode
-                          ? 'bg-[#0a0d0a] border-emerald-500/20 hover:border-emerald-500/50 shadow-lg shadow-emerald-950/20'
+                          ? 'bg-[#0a0d0a] border-cyan-500/20 hover:border-cyan-500/50 shadow-lg shadow-cyan-950/20'
                           : 'bg-white border-gray-200 hover:border-[#8b5cf6]'
                       }`}
                     >
@@ -713,14 +713,14 @@ export default function App() {
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-xs font-mono text-gray-400">{project.date}</span>
                         {project.category && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-emerald-400">
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-400">
                             [{project.category}]
                           </span>
                         )}
                       </div>
 
                       {/* Project Title */}
-                      <h2 className="text-xl font-bold font-sans mb-3 text-gray-100 group-hover:text-emerald-400 transition-colors">
+                      <h2 className="text-xl font-bold font-sans mb-3 text-gray-100 group-hover:text-cyan-400 transition-colors">
                         <TypewriterOnScroll text={project.title} speed={25} />
                       </h2>
 
@@ -728,7 +728,7 @@ export default function App() {
                       {project.previews && project.previews.length > 0 && (
                         <div
                           onClick={() => setPreviewModalProject(project)}
-                          className="relative mb-4 h-48 md:h-56 w-full rounded-lg overflow-hidden border border-emerald-500/30 bg-black/80 cursor-pointer group/preview"
+                          className="relative mb-4 h-48 md:h-56 w-full rounded-lg overflow-hidden border border-cyan-500/30 bg-black/80 cursor-pointer group/preview"
                         >
                           <img
                             src={project.previews[0]}
@@ -736,7 +736,7 @@ export default function App() {
                             className="w-full h-full object-cover opacity-80 group-hover/preview:opacity-100 group-hover/preview:scale-105 transition-all duration-300"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
-                            <div className="flex items-center gap-2 text-xs font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1.5 rounded-md backdrop-blur-sm group-hover/preview:bg-emerald-500 group-hover/preview:text-black transition-all">
+                            <div className="flex items-center gap-2 text-xs font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-500/40 px-3 py-1.5 rounded-md backdrop-blur-sm group-hover/preview:bg-cyan-500 group-hover/preview:text-black transition-all">
                               <Eye size={14} />
                               <span>Click to Preview ({project.previews.length} image{project.previews.length > 1 ? 's' : ''})</span>
                             </div>
@@ -754,7 +754,7 @@ export default function App() {
                         {(project.tags || project.technologies).map((tech: string) => (
                           <span
                             key={tech}
-                            className="text-[11px] px-2.5 py-1 rounded-md font-mono bg-emerald-950/40 border border-emerald-500/30 text-emerald-300"
+                            className="text-[11px] px-2.5 py-1 rounded-md font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-300"
                           >
                             {tech}
                           </span>
@@ -762,12 +762,12 @@ export default function App() {
                       </div>
 
                       {/* Action Bar with Specified Interactive Buttons */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-emerald-500/20">
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-cyan-500/20">
                         <div className="flex items-center gap-2.5 flex-wrap">
                           {/* Button 1: Click for More Details */}
                           <button
                             onClick={() => setDetailsDrawerProject(project)}
-                            className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                            className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer"
                           >
                             <Info size={14} />
                             <span>Click for More Details</span>
@@ -777,7 +777,7 @@ export default function App() {
                           {project.previews && project.previews.length > 0 && (
                             <button
                               onClick={() => setPreviewModalProject(project)}
-                              className="flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-md bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                              className="flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
                             >
                               <Eye size={14} />
                               <span>Preview</span>
@@ -792,7 +792,7 @@ export default function App() {
                               href={project.repoUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
                               title="GitHub Repository"
                             >
                               <Code2 size={14} />
@@ -806,7 +806,7 @@ export default function App() {
                               href={project.demoUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
                               title="Live Prototype Deployment"
                             >
                               <Globe size={14} />
