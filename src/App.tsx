@@ -21,10 +21,15 @@ import {
   Gamepad2,
   GraduationCap,
   Sparkles,
-  Send
+  Send,
+  Eye,
+  Info,
+  Globe
 } from 'lucide-react';
 import { TetrisCanvas } from './components/TetrisCanvas';
 import { TypewriterOnScroll } from './components/TypewriterOnScroll';
+import { ProjectPreviewModal } from './components/ProjectPreviewModal';
+import { ProjectDetailsDrawer } from './components/ProjectDetailsDrawer';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
@@ -71,7 +76,10 @@ export default function App() {
   const [isPostsMenuOpen, setIsPostsMenuOpen] = useState<boolean>(false);
   const [isTagsMenuOpen, setIsTagsMenuOpen] = useState<boolean>(false);
   const [activePost, setActivePost] = useState<Post | null>(null);
-  const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+
+  // Modals & Drawers state for Projects
+  const [previewModalProject, setPreviewModalProject] = useState<ProjectItem | null>(null);
+  const [detailsDrawerProject, setDetailsDrawerProject] = useState<ProjectItem | null>(null);
 
   // Tabbed Section State for "WHAT I KNOW"
   const [skillsTab, setSkillsTab] = useState<'Skills' | 'Education' | 'Currently Learning'>('Skills');
@@ -110,7 +118,6 @@ export default function App() {
     setShowLanding(false);
     setActiveTab('About me');
     setActivePost(null);
-    setActiveProject(null);
     setTimeout(() => {
       const el = document.getElementById('about-me');
       if (el) {
@@ -199,7 +206,6 @@ export default function App() {
           setShowLanding(false);
           setActiveTab('About me');
           setActivePost(null);
-          setActiveProject(null);
           setTimeout(() => {
             const el = document.getElementById('skills-section');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -214,7 +220,6 @@ export default function App() {
           setShowLanding(false);
           setActiveTab('Projects');
           setActivePost(null);
-          setActiveProject(null);
         }}
         className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
       >
@@ -225,7 +230,6 @@ export default function App() {
           setShowLanding(false);
           setActiveTab('Posts');
           setActivePost(null);
-          setActiveProject(null);
         }}
         className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
       >
@@ -283,7 +287,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('Posts');
                   setActivePost(null);
-                  setActiveProject(null);
                   setShowLanding(false);
                 }}
                 className="group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium transition-all duration-200 cursor-pointer bg-emerald-900/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
@@ -296,7 +299,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('Projects');
                   setActivePost(null);
-                  setActiveProject(null);
                   setShowLanding(false);
                 }}
                 className="group inline-flex items-center gap-3 px-6 py-3.5 rounded font-mono font-medium border transition-all duration-200 cursor-pointer bg-emerald-900/20 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20"
@@ -402,7 +404,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('Posts');
                   setActivePost(null);
-                  setActiveProject(null);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded border text-left font-mono text-sm transition-all duration-200 cursor-pointer ${
                   activeTab === 'Posts'
@@ -469,7 +470,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('Projects');
                   setActivePost(null);
-                  setActiveProject(null);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded border text-left font-mono text-sm transition-all duration-200 cursor-pointer ${
                   activeTab === 'Projects'
@@ -499,7 +499,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('Tags');
                   setActivePost(null);
-                  setActiveProject(null);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded border text-left font-mono text-sm transition-all duration-200 cursor-pointer ${
                   activeTab === 'Tags'
@@ -560,7 +559,6 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('About me');
                   setActivePost(null);
-                  setActiveProject(null);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-3.5 rounded border text-left font-mono text-sm transition-all duration-200 cursor-pointer ${
                   activeTab === 'About me'
@@ -600,26 +598,26 @@ export default function App() {
           {/* ACTIVE POST DETAIL */}
           {activePost ? (
             <article className={`p-6 md:p-8 rounded border transition-all ${
-              darkMode ? 'bg-[#0a0d0a] border-gray-800' : 'bg-white border-gray-200'
+              darkMode ? 'bg-[#0a0d0a] border-cyan-500/30 shadow-lg shadow-cyan-950/30' : 'bg-white border-gray-200'
             }`}>
               <button 
                 onClick={() => setActivePost(null)}
-                className="text-xs font-mono mb-6 text-gray-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                className="text-xs font-mono mb-6 text-gray-400 hover:text-cyan-400 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 ← Back to posts
               </button>
               <div className="flex items-center gap-3 text-xs font-mono text-gray-400 mb-3">
                 <span>{activePost.frontmatter.date}</span>
                 <span>•</span>
-                <span>{activePost.frontmatter.readTime}</span>
+                <span className="text-cyan-400">{activePost.frontmatter.readTime}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-4 text-gray-100">
                 <TypewriterOnScroll text={activePost.frontmatter.title} speed={25} />
               </h2>
               <div className="flex flex-wrap gap-2 mb-8">
                 {activePost.frontmatter.tags?.map((t: string) => (
                   <span key={t} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
-                    darkMode ? 'bg-emerald-950/60 border border-emerald-800/50 text-emerald-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
+                    darkMode ? 'bg-cyan-950/60 border border-cyan-500/30 text-cyan-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
                   }`}>
                     #{t}
                   </span>
@@ -629,87 +627,6 @@ export default function App() {
               {/* MARKDOWN RENDERER BODY */}
               <div className="prose prose-invert max-w-none font-sans leading-relaxed text-gray-300 space-y-4">
                 <ReactMarkdown>{activePost.content}</ReactMarkdown>
-              </div>
-            </article>
-          ) : activeProject ? (
-            /* ACTIVE PROJECT DETAIL */
-            <article className={`p-6 md:p-8 rounded border transition-all ${
-              darkMode
-                ? 'bg-[#0a0d0a] border-cyan-900/40 text-gray-200'
-                : 'bg-white border-gray-200 text-gray-800'
-            }`}>
-              <button
-                onClick={() => setActiveProject(null)}
-                className="text-xs font-mono mb-6 text-gray-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
-              >
-                ← Back to projects
-              </button>
-
-              <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-3">
-                <span>{activeProject.date}</span>
-                {activeProject.category && (
-                  <span className={`px-2 py-0.5 rounded text-[11px] font-mono ${
-                    darkMode ? 'bg-cyan-950/80 border border-cyan-800/60 text-[#00f0ff]' : 'bg-violet-50 border border-violet-200 text-[#8b5cf6]'
-                  }`}>
-                    [{activeProject.category}]
-                  </span>
-                )}
-              </div>
-
-              <h2 className="text-2xl md:text-3xl font-bold font-sans mb-3">
-                <TypewriterOnScroll text={activeProject.title} speed={25} />
-              </h2>
-              <p className="text-sm font-sans text-gray-400 leading-relaxed mb-6">
-                <TypewriterOnScroll text={activeProject.description} speed={15} />
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-8">
-                {activeProject.technologies.map((tech: string) => (
-                  <span key={tech} className={`text-xs px-2.5 py-0.5 rounded font-mono ${
-                    darkMode ? 'bg-cyan-950/60 border border-cyan-800/50 text-cyan-300' : 'bg-violet-50 border border-violet-200 text-violet-700'
-                  }`}>
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* PROJECT DETAILS / README */}
-              <div className="prose prose-invert max-w-none font-sans leading-relaxed text-gray-300 space-y-4 mb-10 pb-6 border-b border-gray-800/60">
-                <ReactMarkdown>{activeProject.readme}</ReactMarkdown>
-              </div>
-
-              {/* REPOSITORY & DEPLOYMENT LINKS STRICTLY AT THE END */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                {activeProject.repositoryUrl && (
-                  <a
-                    href={activeProject.repositoryUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded font-mono text-xs font-semibold border transition-all cursor-pointer ${
-                      darkMode
-                        ? 'border-[#00f0ff]/60 bg-[#00f0ff]/10 text-[#00f0ff] hover:border-[#00f0ff] hover:bg-[#00f0ff]/20'
-                        : 'border-[#8b5cf6]/60 bg-[#8b5cf6]/10 text-[#8b5cf6] hover:border-[#8b5cf6] hover:bg-[#8b5cf6]/20'
-                    }`}
-                  >
-                    <span>GitHub Repository</span>
-                    <ExternalLink size={14} />
-                  </a>
-                )}
-                {activeProject.deploymentUrl && (
-                  <a
-                    href={activeProject.deploymentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded font-mono text-xs font-semibold border transition-all cursor-pointer ${
-                      darkMode
-                        ? 'border-gray-700 bg-gray-900 text-gray-200 hover:border-[#00f0ff] hover:text-[#00f0ff]'
-                        : 'border-gray-200 bg-gray-100 text-gray-800 hover:border-[#8b5cf6] hover:text-[#8b5cf6]'
-                    }`}
-                  >
-                    <span>Live Deployment</span>
-                    <ExternalLink size={14} />
-                  </a>
-                )}
               </div>
             </article>
           ) : (
@@ -745,15 +662,15 @@ export default function App() {
                         onClick={() => setActivePost(post)}
                         className={`group p-6 rounded border cursor-pointer transition-all duration-200 ${
                           darkMode
-                            ? 'bg-[#0a0d0a] border-gray-800/80 hover:border-[#00ff66]'
+                            ? 'bg-[#0a0d0a] border-gray-800/80 hover:border-cyan-400'
                             : 'bg-white border-gray-200 hover:border-[#8b5cf6]'
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <span className="text-xs font-mono text-gray-400">{post.frontmatter.date}</span>
-                          <span className="text-xs font-mono text-gray-400">{post.frontmatter.readTime}</span>
+                          <span className="text-xs font-mono text-cyan-400">{post.frontmatter.readTime}</span>
                         </div>
-                        <h2 className="text-xl font-bold font-sans mb-3 group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+                        <h2 className="text-xl font-bold font-sans mb-3 group-hover:text-cyan-400 transition-colors flex items-center justify-between">
                           <TypewriterOnScroll text={post.frontmatter.title} speed={25} />
                           <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </h2>
@@ -786,45 +703,118 @@ export default function App() {
                   {PROJECTS_DATA.map((project: ProjectItem) => (
                     <article
                       key={project.id}
-                      onClick={() => setActiveProject(project)}
-                      className={`group p-6 rounded border cursor-pointer transition-all duration-200 ${
+                      className={`group p-6 rounded-xl border transition-all duration-200 ${
                         darkMode
-                          ? 'bg-[#0a0d0a] border-cyan-950/50 hover:border-[#00f0ff]'
+                          ? 'bg-[#0a0d0a] border-cyan-500/20 hover:border-cyan-500/50 shadow-lg shadow-cyan-950/20'
                           : 'bg-white border-gray-200 hover:border-[#8b5cf6]'
                       }`}
                     >
+                      {/* Top Header */}
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-xs font-mono text-gray-400">{project.date}</span>
                         {project.category && (
-                          <span className={`text-[11px] font-mono opacity-80 ${
-                            darkMode ? 'text-[#00f0ff]' : 'text-[#8b5cf6]'
-                          }`}>
+                          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 text-cyan-400">
                             [{project.category}]
                           </span>
                         )}
                       </div>
-                      <h2 className={`text-xl font-bold font-sans mb-3 transition-colors flex items-center justify-between ${
-                        darkMode ? 'group-hover:text-[#00f0ff]' : 'group-hover:text-[#8b5cf6]'
-                      }`}>
+
+                      {/* Project Title */}
+                      <h2 className="text-xl font-bold font-sans mb-3 text-gray-100 group-hover:text-cyan-400 transition-colors">
                         <TypewriterOnScroll text={project.title} speed={25} />
-                        <ChevronRight size={18} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </h2>
-                      <div className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">
+
+                      {/* Thumbnail Preview Trigger Area */}
+                      {project.previews && project.previews.length > 0 && (
+                        <div
+                          onClick={() => setPreviewModalProject(project)}
+                          className="relative mb-4 h-48 md:h-56 w-full rounded-lg overflow-hidden border border-cyan-500/30 bg-black/80 cursor-pointer group/preview"
+                        >
+                          <img
+                            src={project.previews[0]}
+                            alt={`${project.title} preview`}
+                            className="w-full h-full object-cover opacity-80 group-hover/preview:opacity-100 group-hover/preview:scale-105 transition-all duration-300"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                            <div className="flex items-center gap-2 text-xs font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-500/40 px-3 py-1.5 rounded-md backdrop-blur-sm group-hover/preview:bg-cyan-500 group-hover/preview:text-black transition-all">
+                              <Eye size={14} />
+                              <span>Click to Preview ({project.previews.length} image{project.previews.length > 1 ? 's' : ''})</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Project Short Pitch Description */}
+                      <div className="text-sm text-gray-300 font-sans leading-relaxed mb-4">
                         <TypewriterOnScroll text={project.description} speed={15} />
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech: string) => (
+
+                      {/* Tags / Technologies Badges */}
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {(project.tags || project.technologies).map((tech: string) => (
                           <span
                             key={tech}
-                            className={`text-[11px] px-2 py-0.5 rounded font-mono ${
-                              darkMode
-                                ? 'bg-cyan-950/40 border border-cyan-900/60 text-cyan-300'
-                                : 'bg-violet-50 border border-violet-200 text-violet-700'
-                            }`}
+                            className="text-[11px] px-2.5 py-1 rounded-md font-mono bg-cyan-950/40 border border-cyan-500/30 text-cyan-300"
                           >
                             {tech}
                           </span>
                         ))}
+                      </div>
+
+                      {/* Action Bar with Specified Interactive Buttons */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-cyan-500/20">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          {/* Button 1: Click for More Details */}
+                          <button
+                            onClick={() => setDetailsDrawerProject(project)}
+                            className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer"
+                          >
+                            <Info size={14} />
+                            <span>Click for More Details</span>
+                          </button>
+
+                          {/* Button 2: Preview Icon Button */}
+                          {project.previews && project.previews.length > 0 && (
+                            <button
+                              onClick={() => setPreviewModalProject(project)}
+                              className="flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-md bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
+                            >
+                              <Eye size={14} />
+                              <span>Preview</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {/* GitHub & Live Prototype Deployment Links */}
+                        <div className="flex items-center gap-2.5">
+                          {project.repoUrl && (
+                            <a
+                              href={project.repoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
+                              title="GitHub Repository"
+                            >
+                              <Code2 size={14} />
+                              <span>Code</span>
+                              <ExternalLink size={10} />
+                            </a>
+                          )}
+
+                          {project.demoUrl && (
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-md text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                              title="Live Prototype Deployment"
+                            >
+                              <Globe size={14} />
+                              <span>Live Demo</span>
+                              <ExternalLink size={10} />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </article>
                   ))}
@@ -923,7 +913,6 @@ export default function App() {
                             onClick={() => {
                               setActiveTab('Projects');
                               setActivePost(null);
-                              setActiveProject(null);
                             }}
                           >
                             <span>Visit Projects ↗</span>
@@ -1242,6 +1231,21 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* Global Modals & Drawers */}
+      <ProjectPreviewModal
+        isOpen={!!previewModalProject}
+        onClose={() => setPreviewModalProject(null)}
+        title={previewModalProject?.title || ''}
+        images={previewModalProject?.previews || []}
+      />
+
+      <ProjectDetailsDrawer
+        isOpen={!!detailsDrawerProject}
+        onClose={() => setDetailsDrawerProject(null)}
+        project={detailsDrawerProject}
+        onOpenPreview={(p) => setPreviewModalProject(p)}
+      />
 
       <footer className="relative z-10 w-full py-8 border-t border-gray-800/40 mt-16 text-center text-xs font-mono text-gray-500">
         © Srihari Chincholi
