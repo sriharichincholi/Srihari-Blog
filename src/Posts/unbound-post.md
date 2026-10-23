@@ -8,7 +8,7 @@ excerpt: "A deep dive into prototyping 'Unbound'—from tweaking low-poly retro 
 
 # Unbound: Lessons & Obstacles from Building a 3D Low-Poly Web RPG
 
-Every developer has that one project where they decide to push past standard web apps and step directly into game development. For me, that project was **Unbound**—a web-based, low-poly story RPG built on **Three.js**, **Node.js**, and a custom stack of WebGL tools.
+Every developer has that one project where they decide to push past standard web apps and step directly into game development. For me, that project was **Unbound**—a web-based, low-poly story RPG built on **Three.js**, **Node.js**, and a custom stack of WebGL tools. 
 
 My core objective was ambitious: bring atmospheric shaders, dynamic lighting, and AAA-style game feel into a lightweight, browser-based experience.
 
