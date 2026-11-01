@@ -30,7 +30,7 @@ import { TetrisCanvas } from './components/TetrisCanvas';
 import { TypewriterOnScroll } from './components/TypewriterOnScroll';
 import { ProjectPreviewModal } from './components/ProjectPreviewModal';
 import { ProjectDetailsDrawer } from './components/ProjectDetailsDrawer';
-import { SkillsSection } from './components/Skills';
+import { SkillsSection } from './components/SkillsSection';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
