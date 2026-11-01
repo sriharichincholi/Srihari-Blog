@@ -30,7 +30,7 @@ import { TetrisCanvas } from './components/TetrisCanvas';
 import { TypewriterOnScroll } from './components/TypewriterOnScroll';
 import { ProjectPreviewModal } from './components/ProjectPreviewModal';
 import { ProjectDetailsDrawer } from './components/ProjectDetailsDrawer';
-import { SkillsSection } from './components/SkillsSection';
+import { SkillsSection } from './components/Skills';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
@@ -1073,7 +1073,7 @@ export default function App() {
                     {skillsTab === 'Skills' && (
                       <div className="space-y-6">
                         <SkillsSection
-                          onSelectProject={(url) => {
+                          onSelectProject={(url: string) => {
                             if (url.includes('napier')) {
                               const p = PROJECTS_DATA.find(x => x.id.includes('napier') || x.title.toLowerCase().includes('napier'));
                               if (p) {
@@ -1100,14 +1100,17 @@ export default function App() {
                       </div>
                     )}
 
-                    {/* Education Tab Content */}
+                    {/* Education Tab Content (Reverse-Chronological) */}
                     {skillsTab === 'Education' && (
                       <div className="space-y-4">
-                        <div className="p-4 rounded border border-gray-800 bg-gray-900/40 flex items-start gap-3">
-                          <GraduationCap size={20} className="text-emerald-400 mt-1 shrink-0" />
+                        <div className="p-4 rounded border border-amber-500/30 bg-gray-900/40 flex items-start gap-3">
+                          <GraduationCap size={20} className="text-amber-400 mt-1 shrink-0" />
                           <div>
                             <div className="font-bold text-sm text-gray-200">CBIT, Hyderabad</div>
-                            <div className="text-xs font-mono text-emerald-400">B.E. in Information Technology (2026 — Present)</div>
+                            <div className="text-xs font-mono text-amber-400">B.E. in Information Technology (2026 — Present) • Hyderabad, India</div>
+                            <div className="text-xs text-gray-400 mt-1 font-sans">
+                              Focusing on low-latency systems, software architecture, data structures, and computer science fundamentals.
+                            </div>
                           </div>
                         </div>
 
@@ -1115,7 +1118,10 @@ export default function App() {
                           <GraduationCap size={20} className="text-cyan-400 mt-1 shrink-0" />
                           <div>
                             <div className="font-bold text-sm text-gray-200">Resonance Eduventures</div>
-                            <div className="text-xs font-mono text-cyan-400">Senior Secondary</div>
+                            <div className="text-xs font-mono text-cyan-400">Senior Secondary (STEM / PCM) (2024 — 2026)</div>
+                            <div className="text-xs text-gray-400 mt-1 font-sans">
+                              Advanced mathematics, analytical calculus, linear algebra foundations, physics, chemistry, and competitive exam preparation (JEE Main / EAPCET).
+                            </div>
                           </div>
                         </div>
 
@@ -1123,7 +1129,10 @@ export default function App() {
                           <GraduationCap size={20} className="text-purple-400 mt-1 shrink-0" />
                           <div>
                             <div className="font-bold text-sm text-gray-200">DAV Public School</div>
-                            <div className="text-xs font-mono text-purple-400">Schooling</div>
+                            <div className="text-xs font-mono text-purple-400">Primary & Secondary Schooling (2012 — 2024)</div>
+                            <div className="text-xs text-gray-400 mt-1 font-sans">
+                              Foundational academic years, school-to-district level STEM Olympiad achievements, and early computer science exposure.
+                            </div>
                           </div>
                         </div>
                       </div>
