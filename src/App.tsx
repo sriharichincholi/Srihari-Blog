@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import fm from 'front-matter';
 import { motion } from 'framer-motion';
@@ -68,6 +68,50 @@ const ALL_TAGS = Array.from(
   new Set(POSTS.flatMap(p => p.frontmatter.tags || []))
 );
 
+const scrollToSection = (id: string) => {
+  setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+};
+
+type NavbarTarget = 'home' | 'about' | 'skills' | 'projects' | 'posts';
+
+// --- TOP FLOATING NAVBAR ---
+const TopNavbar: FC<{ onNavigate: (target: NavbarTarget) => void }> = ({ onNavigate }) => (
+  <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-2.5 rounded-full bg-emerald-950/40 backdrop-blur-md border border-emerald-500/20 shadow-lg shadow-emerald-950/50 flex items-center gap-6 text-xs font-mono">
+    <button
+      onClick={() => onNavigate('home')}
+      className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+    >
+      Home
+    </button>
+    <button
+      onClick={() => onNavigate('about')}
+      className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+    >
+      About
+    </button>
+    <button
+      onClick={() => onNavigate('skills')}
+      className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+    >
+      Skills
+    </button>
+    <button
+      onClick={() => onNavigate('projects')}
+      className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
+    >
+      Projects
+    </button>
+    <button
+      onClick={() => onNavigate('posts')}
+      className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
+    >
+      Blog
+    </button>
+  </nav>
+);
+
 export default function App() {
   const [showLanding, setShowLanding] = useState<boolean>(true);
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -119,12 +163,28 @@ export default function App() {
     setShowLanding(false);
     setActiveTab('About me');
     setActivePost(null);
-    setTimeout(() => {
-      const el = document.getElementById('about-me');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    scrollToSection('about-me');
+  };
+
+  const handleNavbarNavigate = (target: NavbarTarget) => {
+    if (target === 'home') {
+      setShowLanding(true);
+      return;
+    }
+
+    setShowLanding(false);
+    setActivePost(null);
+
+    if (target === 'about') {
+      scrollToAboutMe();
+    } else if (target === 'skills') {
+      setActiveTab('About me');
+      scrollToSection('skills-section');
+    } else if (target === 'projects') {
+      setActiveTab('Projects');
+    } else {
+      setActiveTab('Posts');
+    }
   };
 
   // --- MATRIX CANVAS EFFECT FOR BACKGROUND ---
@@ -187,65 +247,13 @@ export default function App() {
     };
   }, [showLanding, activeTab, darkMode]);
 
-  // --- TOP FLOATING NAVBAR ---
-  const TopNavbar = () => (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-2.5 rounded-full bg-emerald-950/40 backdrop-blur-md border border-emerald-500/20 shadow-lg shadow-emerald-950/50 flex items-center gap-6 text-xs font-mono">
-      <button
-        onClick={() => setShowLanding(true)}
-        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
-      >
-        Home
-      </button>
-      <button
-        onClick={scrollToAboutMe}
-        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
-      >
-        About
-      </button>
-      <button
-        onClick={() => {
-          setShowLanding(false);
-          setActiveTab('About me');
-          setActivePost(null);
-          setTimeout(() => {
-            const el = document.getElementById('skills-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
-        }}
-        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
-      >
-        Skills
-      </button>
-      <button
-        onClick={() => {
-          setShowLanding(false);
-          setActiveTab('Projects');
-          setActivePost(null);
-        }}
-        className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer"
-      >
-        Projects
-      </button>
-      <button
-        onClick={() => {
-          setShowLanding(false);
-          setActiveTab('Posts');
-          setActivePost(null);
-        }}
-        className="text-gray-300 hover:text-emerald-400 transition-colors cursor-pointer"
-      >
-        Blog
-      </button>
-    </nav>
-  );
-
   // --- LANDING PAGE ---
   if (showLanding) {
     return (
       <div className={`relative min-h-screen w-full flex flex-col justify-between overflow-x-hidden ${darkMode ? 'bg-[#050705] text-gray-100' : 'bg-slate-50 text-gray-900'}`}>
         <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-70" />
 
-        <TopNavbar />
+        <TopNavbar onNavigate={handleNavbarNavigate} />
 
         <div className="relative z-10 p-6 flex justify-end pt-20">
           <button 
@@ -341,7 +349,7 @@ export default function App() {
     <div className={`relative min-h-screen flex flex-col justify-between ${darkMode ? 'bg-[#050705] text-gray-200' : 'bg-slate-50 text-gray-800'}`}>
       <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-70" />
 
-      <TopNavbar />
+      <TopNavbar onNavigate={handleNavbarNavigate} />
 
       {/* Top Controls */}
       <header className={`relative z-40 w-full border-b px-6 py-4 pt-16 flex justify-between items-center backdrop-blur sticky top-0 ${

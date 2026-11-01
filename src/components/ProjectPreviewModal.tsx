@@ -18,10 +18,15 @@ export const ProjectPreviewModal: React.FC<ProjectPreviewModalProps> = ({
   initialIndex = 0
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(initialIndex);
+  const [wasOpen, setWasOpen] = useState<boolean>(isOpen);
 
-  useEffect(() => {
-    setCurrentIndex(initialIndex);
-  }, [initialIndex, isOpen]);
+  // Reset to the first image whenever the modal is (re)opened.
+  if (isOpen !== wasOpen) {
+    setWasOpen(isOpen);
+    if (isOpen) {
+      setCurrentIndex(Math.min(initialIndex, Math.max(images.length - 1, 0)));
+    }
+  }
 
   const handlePrev = useCallback(() => {
     if (!images || images.length <= 1) return;
