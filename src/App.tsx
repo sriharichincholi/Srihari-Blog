@@ -30,6 +30,7 @@ import { TetrisCanvas } from './components/TetrisCanvas';
 import { TypewriterOnScroll } from './components/TypewriterOnScroll';
 import { ProjectPreviewModal } from './components/ProjectPreviewModal';
 import { ProjectDetailsDrawer } from './components/ProjectDetailsDrawer';
+import { SkillsSection } from './components/SkillsSection';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
@@ -1071,38 +1072,31 @@ export default function App() {
                     {/* Skills Tab Content */}
                     {skillsTab === 'Skills' && (
                       <div className="space-y-6">
-                        <div>
-                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Languages</div>
-                          <div className="flex flex-wrap gap-2">
-                            {['Python', 'TypeScript', 'C++', 'C', 'JavaScript'].map(lang => (
-                              <span key={lang} className="px-3 py-1 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
-                                {lang}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Frameworks</div>
-                          <div className="flex flex-wrap gap-2">
-                            {['Next.js', 'Node.js', 'Three.js', 'Tailwind'].map(fw => (
-                              <span key={fw} className="px-3 py-1 rounded bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
-                                {fw}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="text-xs font-mono text-gray-400 uppercase tracking-wider mb-2">Tools</div>
-                          <div className="flex flex-wrap gap-2">
-                            {['WebSockets', 'Web Audio API', 'Web Scraping'].map(tool => (
-                              <span key={tool} className="px-3 py-1 rounded bg-purple-950/40 border border-purple-500/30 text-purple-300 text-xs font-mono">
-                                {tool}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        <SkillsSection
+                          onSelectProject={(url) => {
+                            if (url.includes('napier')) {
+                              const p = PROJECTS_DATA.find(x => x.id.includes('napier') || x.title.toLowerCase().includes('napier'));
+                              if (p) {
+                                setDetailsDrawerProject(p);
+                                return;
+                              }
+                            } else if (url.includes('manashot')) {
+                              const p = PROJECTS_DATA.find(x => x.id.includes('manashot') || x.title.toLowerCase().includes('manashot'));
+                              if (p) {
+                                setDetailsDrawerProject(p);
+                                return;
+                              }
+                            } else if (url.includes('unbound')) {
+                              const p = PROJECTS_DATA.find(x => x.id.includes('unbound') || x.title.toLowerCase().includes('unbound'));
+                              if (p) {
+                                setDetailsDrawerProject(p);
+                                return;
+                              }
+                            }
+                            setActiveTab('Projects');
+                            setActivePost(null);
+                          }}
+                        />
                       </div>
                     )}
 
