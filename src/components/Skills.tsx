@@ -703,5 +703,4 @@ const HexagonNodeView: React.FC<HexagonNodeViewProps> = ({
   );
 };
 
-export { SkillsSection } from './SkillsSection';
 export default SkillsAdvancementTree;
