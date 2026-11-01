@@ -30,7 +30,7 @@ import { TetrisCanvas } from './components/TetrisCanvas';
 import { TypewriterOnScroll } from './components/TypewriterOnScroll';
 import { ProjectPreviewModal } from './components/ProjectPreviewModal';
 import { ProjectDetailsDrawer } from './components/ProjectDetailsDrawer';
-import { SkillsSection } from './components/SkillsSection';
+import { SkillsSection } from './components/Skills';
 import { PROJECTS_DATA, type ProjectItem } from './projectsData';
 
 // --- TYPES ---
@@ -1073,7 +1073,7 @@ export default function App() {
                     {skillsTab === 'Skills' && (
                       <div className="space-y-6">
                         <SkillsSection
-                          onSelectProject={(url) => {
+                          onSelectProject={(url: string) => {
                             if (url.includes('napier')) {
                               const p = PROJECTS_DATA.find(x => x.id.includes('napier') || x.title.toLowerCase().includes('napier'));
                               if (p) {
